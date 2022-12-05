@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MazeExperiments.MainPage">
+
+    <Grid RowDefinitions="auto, auto, auto, *" ColumnDefinitions="auto, 4*, *, auto, 4*" Margin="10" ColumnSpacing="5">
+        <Label Text="Width" HorizontalOptions="End" VerticalOptions="Center"/>
+        <Slider x:Name="WidthSlider" Maximum="100" Minimum="2" Value="20" ValueChanged="OnValueChanged" Grid.Column="1"/>
+        <Label Text="Height" Grid.Column="3" HorizontalOptions="End" VerticalOptions="Center"/>
+        <Slider x:Name="HeightSlider" Maximum="100" Minimum="2" Value="20" ValueChanged="OnValueChanged" Grid.Column="4"/>
+        <Label Text="Jump chance" Grid.Row="1" HorizontalOptions="End" VerticalOptions="Center"/>
+        <Slider x:Name="JumpChanceSlider" ValueChanged="OnValueChanged" Grid.Row="1" Grid.Column="1"/>
+        <Label Text="Break chance" Grid.Row="1" Grid.Column="3" HorizontalOptions="End" VerticalOptions="Center"/>
+        <Slider x:Name="BreakChanceSlider" ValueChanged="OnValueChanged" Grid.Row="1"  Grid.Column="4" Maximum="0.1"/>
+        <Label Text="Seed" Grid.Row="2" HorizontalOptions="End" VerticalOptions="Center"/>
+        <Slider x:Name="SeedSlider" Maximum="9" ValueChanged="OnValueChanged" Grid.Row="2" Grid.Column="1"/>
+        <Label Text="Show solution" Grid.Row="2" Grid.Column="3" HorizontalOptions="End" VerticalOptions="Center"/>
+        <CheckBox x:Name="ShowSolution" IsChecked="True" CheckedChanged="CheckChanged" Grid.Row="2" Grid.Column="4" HorizontalOptions="Start"/>
+        <GraphicsView x:Name="MazeView" Grid.Row="3" Grid.ColumnSpan="5"/>
+    </Grid>
+</ContentPage>
