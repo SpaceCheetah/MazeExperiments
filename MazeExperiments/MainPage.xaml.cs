@@ -12,7 +12,13 @@ public partial class MainPage : ContentPage {
         UpdateMaze(true);
 	}
 
-    void NormalizeNode(ref (int x, int y) node, (int x, int y) max) {
+    static void NormalizeNode(ref (int x, int y) node, (int x, int y) max) {
+        if(node.x < 0) {
+            node.x = 0;
+        }
+        if(node.y < 0) {
+            node.y = 0;
+        }
         if(node.x >= max.x) {
             node.x = max.x - 1;
         }
