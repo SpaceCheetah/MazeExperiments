@@ -1,0 +1,1 @@
+Just some experiments with maze generation and solving, mostly to practice using C#, .NET MAUI, and unit testing.
