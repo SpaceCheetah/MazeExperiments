@@ -16,6 +16,6 @@
         <Slider x:Name="SeedSlider" Maximum="9" ValueChanged="OnValueChanged" Grid.Row="2" Grid.Column="1"/>
         <Label Text="Show solution" Grid.Row="2" Grid.Column="3" HorizontalOptions="End" VerticalOptions="Center"/>
         <CheckBox x:Name="ShowSolution" IsChecked="True" CheckedChanged="CheckChanged" Grid.Row="2" Grid.Column="4" HorizontalOptions="Start"/>
-        <GraphicsView x:Name="MazeView" Grid.Row="3" Grid.ColumnSpan="5"/>
+        <GraphicsView x:Name="MazeView" Grid.Row="3" Grid.ColumnSpan="5" StartInteraction="MazeView_StartInteraction" DragInteraction="MazeView_DragInteraction"/>
     </Grid>
 </ContentPage>
