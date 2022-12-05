@@ -29,11 +29,11 @@ public partial class MainPage : ContentPage {
 
     void UpdateMaze(bool generationUpdated) {
         if(generationUpdated) {
-            Random rand = new Random((int)SeedSlider.Value);
+            //Recreate the random each time, as a maze with the same paramaters should be the same
+            var rand = new Random((int)SeedSlider.Value);
             _maze = new RectangularMaze((int)WidthSlider.Value, (int)HeightSlider.Value);
             MazeGenerator.GenerateMaze(rand, _maze, (0, 0), JumpChanceSlider.Value, BreakChanceSlider.Value);
         }
-        //Recreate the random each time, as a maze with the same paramaters should be the same
         NormalizeNode(ref _nodeStart, (_maze.Width, _maze.Height));
         NormalizeNode(ref _nodeEnd, (_maze.Width, _maze.Height));
         
@@ -41,13 +41,9 @@ public partial class MainPage : ContentPage {
         MazeView.Drawable = new RectangularMazeDrawable(_maze, _nodeStart, _nodeEnd, solution);
     }
 
-    void OnValueChanged(object sender, EventArgs e) {
-        UpdateMaze(true);
-    }
+    void OnValueChanged(object sender, EventArgs e) => UpdateMaze(true);
 
-    void CheckChanged(object sender, CheckedChangedEventArgs e) {
-        UpdateMaze(false);
-    }
+    void CheckChanged(object sender, CheckedChangedEventArgs e) => UpdateMaze(false);
 
     void MazeView_StartInteraction(object sender, TouchEventArgs e) {
         _nodeStart = ((RectangularMazeDrawable)MazeView.Drawable).HitTest(e.Touches[0].X, e.Touches[0].Y);
@@ -56,10 +52,11 @@ public partial class MainPage : ContentPage {
     }
 
     void MazeView_DragInteraction(object sender, TouchEventArgs e) {
-        (int x, int y) = ((RectangularMazeDrawable)MazeView.Drawable).HitTest(e.Touches[0].X, e.Touches[0].Y);
-        if (_nodeEnd == (x, y)) return;
-        if ((x, y) == (-1, -1)) return; //last drawable hasn't been used yet, so hit test fails
-        _nodeEnd = (x, y);
+        (int x, int y) node = ((RectangularMazeDrawable)MazeView.Drawable).HitTest(e.Touches[0].X, e.Touches[0].Y);
+        if (node == _nodeEnd || node == (-1, -1)) {
+            return;
+        }
+        _nodeEnd = node;
         UpdateMaze(false);
     }
 }
