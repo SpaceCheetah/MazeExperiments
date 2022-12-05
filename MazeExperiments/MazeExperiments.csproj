@@ -56,6 +56,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="RectangularMazePage.xaml.cs">
+	    <DependentUpon>RectangularMazePage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Properties\Resources.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
@@ -72,6 +75,12 @@
 
 	<ItemGroup>
 	  <Folder Include="Tests\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="AppShell.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

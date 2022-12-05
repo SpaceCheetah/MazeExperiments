@@ -2,12 +2,12 @@
 
 namespace MazeExperiments;
 
-public partial class MainPage : ContentPage {
+public partial class RectangularMazePage : ContentPage {
     (int x, int y) nodeStart = (0, 0);
     (int x, int y) nodeEnd = (19, 19);
     RectangularMaze maze;
 
-	public MainPage() {
+	public RectangularMazePage() {
 		InitializeComponent();
         UpdateMaze(true);
 	}
