@@ -1,4 +1,6 @@
-﻿namespace MazeExperiments;
+﻿using System.Collections.ObjectModel;
+
+namespace MazeExperiments;
 public class RectangularMaze : IMaze<(int x, int y)> {
     readonly bool[,] rightPassages; //rightWalls[x,y] is whether there is a passage at cell x,y
     readonly bool[,] downPassages; //similar, but for down

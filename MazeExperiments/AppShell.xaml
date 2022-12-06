@@ -4,6 +4,7 @@
        xmlns:app="clr-namespace:MazeExperiments"
        x:Class="MazeExperiments.AppShell">
     <TabBar>
-        <ShellContent Title="Rectangular maze" ContentTemplate="{DataTemplate app:RectangularMazePage}"/>
+        <ShellContent Title="Rectangular Maze" ContentTemplate="{DataTemplate app:RectangularMazePage}" Icon="rectangular_maze_icon.svg"/>
+        <ShellContent Title="Circular Maze" ContentTemplate="{DataTemplate app:CircularMazePage}" Icon="circular_maze_icon.svg"/>
     </TabBar>
 </Shell>

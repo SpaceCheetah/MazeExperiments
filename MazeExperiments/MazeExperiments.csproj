@@ -74,11 +74,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Tests\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <MauiXaml Update="AppShell.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="CircularMazePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
