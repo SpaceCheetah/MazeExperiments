@@ -3,6 +3,8 @@ public static class MazeSolver {
     //A* implementation
     //Returns the best path if there is a valid one, or null if there are no valid paths
     //The path is returned is all the nodes from the goal to the start
+    //For most mazes, can just reverse start and goal to get the path in forward order. However, some mazes may have directional nodes,
+    //and as such the path from start to goal may not be the same as the path from goal to start.
     public static List<TNode> GetBestPath<TNode>(TNode start, TNode goal, IMaze<TNode> maze) {
         EqualityComparer<TNode> comparer = EqualityComparer<TNode>.Default;
         var predecessor = new Dictionary<TNode, TNode>();

@@ -8,72 +8,60 @@ using System.Threading.Tasks;
 
 namespace MazeExperiments;
 public class CircularMaze : IMaze<(int level, int section)> {
-    /* Sections per level: LevelDivisionFactor*level, except level 0 which has 1
-     * Potential neighbors: same level +- section (section wraps), level below at section / LevelDivisionFactor, level above at section * LevelDivisionFactor + n, where n = [0,LevelDivisionFactor)
-     * So, every node has LevelDivisionFactor + 3 neighbors max
-     */
     public int Levels { get; }
-    public int LevelDivisionFactor { get; }
 
     //nodes[level][section] contains all nodes it could or has connected to
     Dictionary<(int level, int section), bool>[][] nodes;
 
-    public CircularMaze(int levels, int levelDivisionFactor) {
-        double minOverlap = 0.5; //might make this configurable later
+    public CircularMaze(int levels, int level1Sections) {
         Levels = levels;
-        LevelDivisionFactor = levelDivisionFactor;
         nodes = new Dictionary<(int level, int section), bool>[levels][];
-        for(int level = 0; level < levels; level++) {
-            nodes[level] = new Dictionary<(int level, int section), bool>[level == 0 ? 1 : level * LevelDivisionFactor];
+        int sectionCount = level1Sections;
+        nodes[0] = new Dictionary<(int, int), bool>[1];
+        nodes[0][0] = new Dictionary<(int, int), bool>();
+        for(int level = 1; level < levels; level++) {
+            if(level1Sections * level >= sectionCount * 2) {
+                sectionCount *= 2;
+            }
+            nodes[level] = new Dictionary<(int level, int section), bool>[sectionCount];
             for(int section = 0; section < nodes[level].Length; section++) {
                 nodes[level][section] = new Dictionary<(int level, int section), bool>();
             }
         }
         if (levels == 1) return;
-        int sectionsCurrent = levelDivisionFactor;
-        for(int section = 0; section < sectionsCurrent; section++) {
+        for(int section = 0; section < nodes[1].Length; section++) {
             nodes[0][0][(1, section)] = false;
             nodes[1][section][(0, 0)] = false;
         }
         for (int level = 1; level < Levels; level++) {
-            int sectionsNext = sectionsCurrent + levelDivisionFactor;
-            double minOverlapLevel = 1.0 / sectionsNext * minOverlap;
-            for(int section = 0; section < sectionsCurrent; section++) {
+            for(int section = 0; section < nodes[level].Length; section++) {
                 var neighbors = nodes[level][section];
                 //add horizontal neighbors
-                if (sectionsCurrent == 2) {
+                if (nodes[level].Length == 2) {
                     neighbors[(level, (section + 1) % 2)] = false;
-                } else if(sectionsCurrent > 2) {
-                    int leftNeighbor = section == 0 ? sectionsCurrent - 1 : section - 1;
-                    int rightNeighbor = (section + 1) % sectionsCurrent;
+                } else if(nodes[level].Length > 2) {
+                    int leftNeighbor = section == 0 ? nodes[level].Length - 1 : section - 1;
+                    int rightNeighbor = (section + 1) % nodes[level].Length;
                     neighbors[(level, leftNeighbor)] = false;
                     neighbors[(level, rightNeighbor)] = false;
                 }
                 //add neighbors on the next level
-                if(level < Levels - 1) {
-                    //faction comparison without doubles: multiply by denominators. Num is numerator in this case
-                    //int fractionStartNum = section * sectionsNext;
-                    //int fractionEndNum = (section + 1) * sectionsNext;
-                    double fractionStart = (double)section / sectionsCurrent;
-                    double fractionEnd = (section + 1.0) / sectionsCurrent;
-                    for(int upperSection = 0; upperSection < sectionsNext; upperSection++) {
-                        //int upperFractionStartNum = upperSection * sectionsCurrent;
-                        //int upperFractionEndNum = (upperSection + 1) * sectionsCurrent;
-                        double upperFractionStart = (double)upperSection / sectionsNext;
-                        double upperFractionEnd = (upperSection + 1.0) / sectionsNext;
-                        if (upperFractionStart > fractionEnd) break;
-                        double overlap = Math.Min(fractionEnd, upperFractionEnd) - Math.Max(fractionStart, upperFractionStart);
-                        if(overlap > minOverlapLevel) {
-                            neighbors[(level + 1, upperSection)] = false;
-                            nodes[level + 1][upperSection][(level, section)] = false;
-                        }
-                    }
+                if (level == Levels - 1) continue; //no next level to add connections to 
+                //with the current scheme, each node either has 1 or 2 connections on the next layer
+                if (nodes[level].Length == nodes[level + 1].Length) {
+                    neighbors[(level + 1, section)] = false;
+                    nodes[level + 1][section][(level, section)] = false;
+                } else {
+                    neighbors[(level + 1, section * 2)] = false;
+                    neighbors[(level + 1, section * 2 + 1)] = false;
+                    nodes[level + 1][section * 2][(level, section)] = false;
+                    nodes[level + 1][section * 2 + 1][(level, section)] = false;
                 }
             }
-
-            sectionsCurrent += levelDivisionFactor;
         }
     }
+
+    public int GetNumSections(int level) => nodes[level].Length;
 
     //not part of the IMaze interface; need to get all neighbors, connected or not, to draw properly
     public ReadOnlyDictionary<(int level, int section), bool> GetAllNeighbors(int level, int section) => new(nodes[level][section]);
