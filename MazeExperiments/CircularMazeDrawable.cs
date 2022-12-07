@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ public class CircularMazeDrawable : IDrawable {
     readonly CircularMaze maze;
     readonly (int level, int section) start, goal;
     List<(int level, int section)> solution;
+    float levelWidth = -1;
+    PointF center;
 
     public CircularMazeDrawable(CircularMaze maze, (int level, int section) start, (int level, int section) goal, List<(int level, int section)> solution = null) {
         this.maze = maze;
@@ -18,10 +21,34 @@ public class CircularMazeDrawable : IDrawable {
         this.solution = solution;
     }
 
+    public (int level, int section) HitTest(float x, float y) {
+        if (levelWidth <= 0) return (-1, -1);
+        float relX = x - center.X;
+        float relY = center.Y - y;
+        double radius = Math.Sqrt(relX * relX + relY * relY);
+        int level = (int)(radius / levelWidth);
+        if(level >= maze.Levels) {
+            return (-1, -1);
+        }
+        double theta = Math.Atan2(Math.Abs(relY), Math.Abs(relX));
+        
+        //correct for quadrant
+        if (relX < 0 && relY >= 0) { //quadrant 2
+            theta = Math.PI - theta;
+        } else if(relX <= 0 && relY < 0) { //quadrant 3
+            theta += Math.PI;
+        } else if(relX > 0 && relY < 0) { //quadrant 4
+            theta = Math.Tau - theta;
+        }
+        theta = Math.Tau - theta; //change to clockwise
+        int section = (int)(theta / Math.Tau * maze.GetNumSections(level));
+        return (level, section);
+    }
+
     public void Draw(ICanvas canvas, RectF dirtyRect) {
         if (maze.Levels == 0) return;
-        float levelWidth = Math.Min(dirtyRect.Width, dirtyRect.Height) / maze.Levels * 0.4f;
-        PointF center = dirtyRect.Center;
+        levelWidth = Math.Min(dirtyRect.Width, dirtyRect.Height) / maze.Levels * 0.4f;
+        center = dirtyRect.Center;
         //mark start and goal
         canvas.FillColor = Colors.Blue;
         (float x, float y) startCoords = GetCellCoords(start.level, start.section, maze.GetNumSections(start.level), center, levelWidth);
