@@ -16,7 +16,7 @@ public class CircularMazeDrawable : IDrawable {
         if (maze.Levels == 0 || maze.LevelDivisionFactor == 0) return;
         float levelWidth = Math.Min(dirtyRect.Width, dirtyRect.Height) / maze.Levels * 0.4f;
         PointF center = dirtyRect.Center;
-        canvas.StrokeSize = levelWidth / maze.Levels / 2;
+        canvas.StrokeSize = levelWidth / maze.Levels;
         canvas.StrokeLineCap = LineCap.Round;
         canvas.StrokeColor = Application.Current.RequestedTheme == AppTheme.Dark ? Colors.White : Colors.Black;
         //draw rings for levels
