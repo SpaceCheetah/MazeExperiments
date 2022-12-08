@@ -63,9 +63,6 @@ public class CircularMaze : IMaze<(int level, int section)> {
 
     public int GetNumSections(int level) => nodes[level].Length;
 
-    //not part of the IMaze interface; need to get all neighbors, connected or not, to draw properly
-    public ReadOnlyDictionary<(int level, int section), bool> GetAllNeighbors(int level, int section) => new(nodes[level][section]);
-
     public List<(int level, int section)> GetNeighbors((int level, int section) node) {
         var neighbors = new List<(int level, int section)>();
         foreach (((int level, int section), bool connected) in nodes[node.level][node.section]) {

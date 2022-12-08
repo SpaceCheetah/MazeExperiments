@@ -77,8 +77,8 @@ public class CircularMazeDrawable : IDrawable {
                     int sectionAngleStart = level == 0 ? 360 : 360 - section * 360 / sectionCount;
                     int sectionAngleEnd = level == 0 ? 0 : 360 - (section + 1) * 360 / sectionCount;
                     //int lastNeighborEnd = sectionAngleStart;
-                    foreach(((int level, int section) node, bool connected) in maze.GetAllNeighbors(level, section)) {
-                        if (node.level != level + 1 || connected) continue; //only have to draw barriers for unconnected neighbors on the next level
+                    foreach((int level, int section) node in maze.GetPossibleNeighbors((level, section))) {
+                        if (node.level != level + 1) continue; //only have to draw barriers for unconnected neighbors on the next level
                         int neighborAngleStart = 360 - node.section * 360 / (maze.GetNumSections(level + 1));
                         int neighborAngleEnd = 360 - (node.section + 1) * 360 / maze.GetNumSections(level + 1);
                         canvas.DrawArc(x, y, radius * 2, radius * 2, Math.Min(neighborAngleStart, sectionAngleStart), Math.Max(neighborAngleEnd, sectionAngleEnd), true, false);
